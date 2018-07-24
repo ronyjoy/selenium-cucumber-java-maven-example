@@ -86,4 +86,64 @@
 		</plugins>
 	</build>
 	
+	 <profiles>
+    <profile>
+      <id>docker_img</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+        <property>
+          <name>docker_img</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.spotify</groupId>
+            <artifactId>docker-maven-plugin</artifactId>
+            <version>0.4.12</version>
+            <configuration>
+              <serverId>gemalto-docker-hub</serverId>
+              <imageName>cargo/cargo-test</imageName>
+              <dockerDirectory>.</dockerDirectory>
+              <buildArgs>
+                <SERVICE_VERSION>${project.version}</SERVICE_VERSION>
+              </buildArgs>
+            </configuration>
+            <executions>
+              <execution>
+                <id>build-image</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>build</goal>
+                </goals>
+                <configuration>
+                  <image>cargo/cargo-test</image>
+                  <imageTags>
+                    <imageTag>${project.version}</imageTag>
+                    <imageTag>latest</imageTag>
+                  </imageTags>
+                </configuration>
+              </execution>
+              <execution>
+                <id>tag-image</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>tag</goal>
+                </goals>
+                <configuration>
+                  <image>cargo/cargo-test</image>
+                  <newName>ronyjoy/cargo-test:latest</newName>
+                </configuration>
+              </execution>
+      
+            
+
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    </profiles>
+	
 </project>

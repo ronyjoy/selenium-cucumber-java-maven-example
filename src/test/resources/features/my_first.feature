@@ -1,12 +1,13 @@
-Feature: Login
-        As a user I should able to login into my app
- 
- Scenario: I login with valid credential
- 		Given I navigate to "http://the-internet.herokuapp.com/login"
-        And I enter "tomsmith" into input field having id "username"
-        And I enter "SuperSecretPassword!" into input field having id "password"
-        When I click on element having class "radius"
-        Then I should get logged-in
- 
- Scenario: Close browser
- 		Then I close browser 
+Feature: Cargo UI
+
+  @cargo
+  Scenario: Login to CargoUI to verify actual number of links
+    Given that I am on Cargospear login page
+    When I have provided valid username and password
+    Then I should be able to login
+  @cargo
+  Scenario: Login Failure
+    Given that I am on Cargospear login page
+    When I have provided invalid username or password
+    Then I should not be able to login
+

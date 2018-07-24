@@ -37,7 +37,7 @@ import io.appium.java_client.ios.IOSDriver;
 
 public class DriverUtil {
     public static long DEFAULT_WAIT = 20;
-    protected static WebDriver driver=null;
+    protected static WebDriver driver = null;
     static String currentPath = System.getProperty("user.dir");
     static Properties prop = new Properties();
     static DesiredCapabilities capability=null;
@@ -131,65 +131,14 @@ public class DriverUtil {
 	}
 
 	public static WebDriver getDefaultDriver() {
-		if (driver != null) {
-			return driver;
+		try {
+			DesiredCapabilities dc = DesiredCapabilities.chrome();
+			driver =  new RemoteWebDriver(new URL("http://192.168.99.100:4444/wd/hub"), dc);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		
-		String enviroment = "desktop";
-		String platform = "";
-		String config = System.getProperty("config", "");
-		
-		if(!config.isEmpty())
-		{
-			try{
-				enviroment = config.split("_")[0].toLowerCase();
-				platform = config.split("_")[1].toLowerCase();
-				InputStream input = new FileInputStream(currentPath+"/src/main/java/browserConfigs/"+config+".properties");
-				capability = getCapability(input);
-			}
-			catch(Exception e){
-				System.out.println("\nException : File not present or Invalid config file name "+config+".properties");
-				System.out.println("Config file format should be : enviroment_platform_device.properties");
-				System.out.println("\nE.g : local_android_nexus5.properties");
-				System.out.println("E.g : local_ios_iphone6.properties");
-				System.out.println("E.g : browserstack_android_nexus5.properties");
-				System.out.println("E.g : saucelab_windows7_chrome.properties");
-				System.exit(0);
-			}
-		}
-		
-		switch(enviroment)
-		{
-			case "local": if(platform.equals("android"))
-							  driver = androidDriver(capability);
-						  else if(platform.equals("ios"))
-							  driver =  iosDriver(capability);
-						  else{
-							  System.out.println("unsupported platform");
-							  System.exit(0);
-						  }
-						  break;
-			
-			case "browserstack": driver = browserStackDriver(capability);
-								 break;
-			
-			case "saucelab": driver = saucelabDriver(capability);
-			 					 break;
-			 					 
-			case "desktop": DesiredCapabilities capabilities = null;
-							capabilities = DesiredCapabilities.firefox();
-					        capabilities.setJavascriptEnabled(true);
-					        capabilities.setCapability("takesScreenshot", true);
-					        driver = chooseDriver(capabilities);
-					        driver.manage().timeouts().setScriptTimeout(DEFAULT_WAIT, TimeUnit.SECONDS);
-					        driver.manage().window().maximize();
-					        break;
-			
-			default : 	System.out.println("\nException : Invalid platform "+enviroment);
-						System.exit(0);
-		}
-        
-        return driver;
+		return driver;
     }
 
     /*
