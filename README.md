@@ -7,10 +7,14 @@ Once installed, create a new directory and create a docker-compose.yml file with
 
 Selenium Grid is used to run our tests on different OS/browsers in parallel. It basically uses master-slaves (or hub-nodes) concept – where there is one master/hub and there are few slaves/nodes registered to the master/hub. When we send our tests to the master/hub for execution, based on the browser/OS requirements of the test, master will route the request to the appropriate nodes and get them executed. Thus it minimizes the overall execution time of the tests.
 
+
+Commands to 
 docker-compose up -d
 
 docker-compose ps
 
 docker-compose scale chrome=5
+
+mvn clean test
 
 sudo docker-compose down
